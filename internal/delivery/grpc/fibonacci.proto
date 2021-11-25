@@ -1,0 +1,18 @@
+syntax = "proto3";
+option go_package = "./pb";
+
+package service;
+
+service Fibonacci {
+  rpc Post (Request) returns (Response) {}
+}
+
+message Request {
+  uint64  x = 1;
+  uint64  y = 2;
+}
+
+message Response{
+  repeated uint64 numbers = 1;
+  string error = 2;
+}

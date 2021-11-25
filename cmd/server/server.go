@@ -4,6 +4,7 @@ import (
 	"context"
 	"fibonachi/internal/config"
 	"fibonachi/internal/delivery/http/handler"
+	"fibonachi/internal/server/grpc"
 	"fibonachi/internal/server/rest"
 	"fibonachi/internal/service"
 	"fibonachi/internal/store"
@@ -38,12 +39,19 @@ func main() {
 		}
 	}()
 
-	logrus.Printf("Fibonacci rest server started")
+	logrus.Printf("Fibonacci rest rest server started")
+
+	quitGrpc := make(chan bool)
+
+	grpcServer := grpc.New(services.Fibonacci)
+	grpcServer.Run(quitGrpc)
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 	time.Sleep(2 * time.Second)
+
+	quitGrpc <- true
 
 	logrus.Print("App Shutting Down")
 

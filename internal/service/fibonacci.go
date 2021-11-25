@@ -6,7 +6,6 @@ import (
 	"fibonachi/internal/store"
 	"fmt"
 	"github.com/sirupsen/logrus"
-	"strconv"
 	"time"
 )
 
@@ -26,10 +25,8 @@ func (f *FibonacciService) CalculateResult(ctx context.Context, from uint64, to 
 	if err != nil {
 		logrus.Errorf("Failed to get value by key: %s, err: %s", key, err.Error())
 	}
-	var sliceValues []uint64
-	err = json.Unmarshal([]byte(data), &sliceValues)
-
-	values := sliceValues
+	var values []uint64
+	err = json.Unmarshal([]byte(data), &values)
 
 	if len(values) != 0 {
 		logrus.Infof("Found key in Redis, key: %s, values: %v", key, values)
@@ -47,28 +44,6 @@ func (f *FibonacciService) CalculateResult(ctx context.Context, from uint64, to 
 	return fibonacciValues, nil
 }
 
-func convertStringToUint64SLice(values []string) []uint64 {
-	var valuesInt []uint64
-
-	for i := range values {
-		number := values[i]
-		valueInt, _ := strconv.ParseUint(number, 0, 64)
-		valuesInt = append(valuesInt, valueInt)
-	}
-	return valuesInt
-}
-
-func convertUint64ToStringSLice(values []uint64) []string {
-	var valuesString []string
-
-	for i := range values {
-		value := values[i]
-		valueString := strconv.FormatUint(value, 10)
-		valuesString = append(valuesString, valueString)
-	}
-
-	return valuesString
-}
 func calculateNumbers(from uint64, to uint64) []uint64 {
 	var values []uint64
 

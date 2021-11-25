@@ -21,7 +21,7 @@ func (s *Server) Run(handler http.Handler) error {
 		ReadTimeout:  2 * time.Second,
 		WriteTimeout: 2 * time.Second,
 	}
-	fmt.Println("Server started successfully")
+	fmt.Println("Rest server started successfully")
 	return s.httpServer.ListenAndServe()
 }
 

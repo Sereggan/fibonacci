@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fibonachi/internal/delivery"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -27,7 +28,12 @@ func (h *Handler) Calculate(context *gin.Context) {
 		newErrorResponse(context, http.StatusBadRequest, err.Error())
 		return
 	}
-
+	isValid := delivery.ValidateInputParameters(request.X, request.Y)
+	if !isValid {
+		logrus.Errorf("Validation failed for x: %d, y: %d", request.X, request.Y)
+		newErrorResponse(context, http.StatusBadRequest, err.Error())
+		return
+	}
 	numbers, err := h.services.Fibonacci.CalculateResult(context, request.X, request.Y)
 
 	if err != nil {
